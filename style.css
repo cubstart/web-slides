@@ -1,0 +1,19 @@
+h1 {
+    font-weight: bold;
+    color: #409ac1;
+}
+
+.slidev-layout {
+    font-size: 1.6rem;
+    background-color: #edf6fb;
+    --prism-font-size: 1.1rem;
+}
+
+.cover {
+    background-color: rgb(48, 124, 156);
+    color: white;
+}
+
+.cover h1 {
+    color: white;
+}
