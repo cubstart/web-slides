@@ -14,7 +14,7 @@ drawings:
 defaults:
   foo: true
 transition: slide-left
-title: Welcome to Slidev
+title: Cubstart Lecture 8
 mdc: true
 ---
 
@@ -401,7 +401,7 @@ app.use(
 ```javascript
 const { requiresAuth } = require('express-openid-connect');
 
-app.get('/profile', requireAuth(), (req, res) => {
+app.get('/profile', requiresAuth(), (req, res) => {
   res.json(req.openid.user);
 });
 ```

@@ -14,7 +14,7 @@ drawings:
 defaults:
   foo: true
 transition: slide-left
-title: Welcome to Slidev
+title: Cubstart Lecture 6
 mdc: true
 ---
 
