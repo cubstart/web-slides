@@ -3,9 +3,10 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "build": "npm-run-all --parallel build:*",
+    "build": "npm-run-all --parallel build:* && npm run cp-404",
     "build:lecture-6": "slidev build lecture-6.md --base /web-slides/lecture-6/ --out dist/lecture-6/",
     "build:lecture-8": "slidev build lecture-8.md --base /web-slides/lecture-8/ --out dist/lecture-8/",
+    "cp-404": "cp dist/lecture-8/404.html dist/404.html",
     "dev": "slidev --open",
     "export": "slidev export"
   },
