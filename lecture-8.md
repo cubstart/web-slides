@@ -70,11 +70,16 @@ What else can backends do? What do they consist of?
 ---
 
 # File Serving - express.static()
+<https://expressjs.com/en/starter/static-files.html>
 
-- `express.static()`: A built-in middleware function in Express.js used to serve static files such as HTML, CSS, and JavaScript from a specified directory. It simplifies the process of serving static assets in web applications.
-- Importance: Serving static files is essential for delivering frontend resources required for rendering web pages in our applications.
+- `express.static()`: A built-in middleware function in Express.js used to serve static files such as HTML, CSS, and JavaScript from a specified directory.
 
-<!-- Speaker Notes: Explain how to serve static files using express.static() in Express.js. Discuss the importance of organizing static files in a public directory and how to configure express.static(). -->
+```js
+// serves our frontend files from the 'public' directory
+// (GET /, /script.js, /styles.css, etc.)
+app.use(express.static(__dirname + "/public"));
+```
+
 
 ---
 
@@ -82,23 +87,17 @@ What else can backends do? What do they consist of?
 
 - Websockets: A communication protocol (like HTTP) that enables real-time data transfer between clients and servers, allowing for interactive web applications.
 - Use Cases: chat applications, live sports scores, and collaborative editing tools, etc.
+- In Node.js: can use [socket.io](https://socket.io/) for a beginner-friendly library
 
-<!--
-Speaker Notes: Introduce Websockets as a technology for real-time communication between the client and server. Mention common use cases such as chat applications and live updates. Discuss libraries like Socket.io for implementing Websockets in Node.js applications.
--->
 
 ---
 
-# Security (ex. use Helmet)
+# Security with [Helmet](https://github.com/helmetjs/helmet)
 Generally, lots of security considerations in full-stack web dev!
 
-- Helmet is a middleware for Express.js that helps secure HTTP headers by setting various security-related headers.
+- Helmet is a middleware for Express.js that helps secure webapps by setting various security-related HTTP headers.
+- Mitigates some security risks and protects webapps from common vulnerabilities, such as cross-site scripting (XSS) and clickjacking.
 - Common Security Headers: Content Security Policy (CSP), X-XSS-Protection, X-Frame-Options, X-Content-Type-Options
-- Importance: Helmet helps mitigate security risks and protect web applications from common vulnerabilities, such as cross-site scripting (XSS) and clickjacking.
-
-<!--
-Speaker Notes: Discuss the importance of security in web applications and how Helmet helps mitigate security risks by setting HTTP headers securely. Explain common security headers provided by Helmet and their purposes.
--->
 
 ---
 
@@ -113,10 +112,8 @@ Cookies: Small pieces of data sent from servers that browsers store
 Sessions: mechanism to store user data on the server temporarily
   - Typically identified by a unique session ID
   - Used to maintain user state across multiple requests
+  - [express-session](https://expressjs.com/en/resources/middleware/session.html)
 
-<!--
-Speaker Notes: Discuss the purpose and use cases of cookies and sessions in web applications. Mention how sessions can be implemented in Express.js using middleware like express-session.
--->
 
 ---
 
@@ -134,13 +131,9 @@ Speaker Notes: Discuss the purpose and use cases of cookies and sessions in web 
 
 # Proper Error Handling
 
-- Effective error handling improves user experience and application reliability by gracefully managing unexpected conditions and providing informative feedback to users and developers.
+- Improves user experience and application reliability by handling unexpected issues gracefully (don't crash server!) and providing clients with useful information.
+- Critical for debugging, troubleshooting, and maintaining application stability.
 - Techniques: try-catch blocks, error middleware, logging
-- Importance: Proper error handling is critical for debugging, troubleshooting, and maintaining application stability.
-
-<!--
-Speaker Notes: Explain the significance of proper error handling in backend development. Discuss strategies for handling errors gracefully and logging error details for debugging purposes.
--->
 
 ---
 
@@ -150,28 +143,22 @@ Speaker Notes: Explain the significance of proper error handling in backend deve
 - Common Logging Levels: Debug, Info, Warning, Error, Critical.
 - Tools: pino, winston, morgan, etc. (node.js)
 
-<!-- Speaker Notes: Introduce logging as a critical aspect of backend development. Discuss the importance of logging different types of events and choosing appropriate logging levels. Mention popular logging libraries like Winston and Morgan. -->
-
 
 ---
 
 # Caching
 
 - Caching improves application performance by storing frequently accessed data temporarily, reducing server load and response times.
+- Optimizes resource utilization and delivers content quickly and efficiently.
 - Techniques: Client-side caching, server-side caching, content delivery networks (CDNs).
-- Importance: Caching helps optimize resource utilization and enhance user experience by delivering content quickly and efficiently.
-
-<!-- Speaker Notes: Explain caching as a technique for improving performance and reducing server load. Discuss different caching strategies and when to use them. Mention caching libraries like Node-cache for server-side caching. -->
 
 ---
 
 # Testing
 
 - Testing ensures application reliability and identifies bugs early in the development process, reducing maintenance costs and improving code quality.
-- Types of Testing: Unit testing, integration testing, end-to-end testing.
+- Types of Testing: Unit testing, integration testing, end-to-end testing (both frontend and backend!)
 - Tools: Jest, Mocha, Chai
-
-<!-- Speaker Notes: Discuss the importance of testing in backend development and the different types of testing methodologies. Mention popular testing frameworks like Jest and Mocha for testing Node.js applications. -->
 
 ---
 
@@ -181,9 +168,6 @@ Explore the comprehensive roadmap for learning backend development.
 
   <iframe src="https://roadmap.sh/backend" class="w-full mt-8 h-90" />
 
-<!--
-Speaker Notes: Introduce roadmap.sh/backend as a valuable resource for learning and mastering backend development concepts. Encourage students to explore the roadmap to gain a deeper understanding of backend technologies and best practices.
--->
 
 ---
 layout: cubstart-cover
@@ -199,8 +183,6 @@ layout: cubstart-cover
 - Web Servers: Handle API requests and potentially serve static files.
 - Databases: Store and manage application data.
 
-<!-- Speaker Notes: Explain the components of web applications and their respective roles. Emphasize the separation of concerns between frontend, backend, and database layers. -->
-
 ---
 
 # "Managed" Services
@@ -209,16 +191,12 @@ layout: cubstart-cover
 - PaaS (Platform as a Service): Offers platforms for application deployment and management, including runtime environments and middleware.
 - IaaS (Infrastructure as a Service): Provides virtualized computing resources over the internet, including servers, storage, and networking.
 
-<!-- Speaker Notes: Discuss the different types of managed services for deploying web applications. Explain the trade-offs between BaaS, PaaS, and IaaS in terms of control, scalability, and management overhead. -->
-
 ---
 
 # Databases
 
 - Databases also need to be deployed and managed.
 - Options include using managed database services or setting up databases on virtual machines.
-
-<!-- Speaker Notes: Highlight the importance of deploying and managing databases for web applications. Discuss the benefits of using managed database services for scalability, reliability, and ease of maintenance. -->
 
 ---
 
@@ -291,7 +269,6 @@ Can combine multiple methods!
 - Containerization: Deploy **containers**, or lightweight packages containing your code and all software/system dependencies
 - Serverless Platforms: Deploy just **functions** (pieces of code) that run on the cloud
 
-<!-- Speaker Notes: Explain the various deployment options available for web applications, ranging from self-hosting to serverless architectures. Discuss the benefits and drawbacks of each approach in terms of scalability, cost, and complexity. -->
 
 ---
 
@@ -314,8 +291,6 @@ layout: cubstart-cover
 - Authentication is the process of verifying the identity of a user.
 - Important for controlling access to resources and protecting sensitive data.
 
-<!-- Speaker Notes: Introduce authentication as a crucial aspect of web application security. Discuss the importance of verifying user identities to control access and maintain data integrity. -->
-
 ---
 
 # Many Ways to Implement Authentication
@@ -324,16 +299,12 @@ layout: cubstart-cover
 - Use a Library (e.g., Passport.js): Leverage existing authentication strategies and middleware.
 - Use a Managed Service Like Auth0: Simplifies authentication with comprehensive features and integrations.
 
-<!-- Speaker Notes: Discuss different approaches to implementing authentication in web applications. Emphasize the benefits of using libraries or managed services for authentication to reduce development time and improve security. -->
-
 ---
 
 # Under-the-Hood: Cookies & Sessions or JWT Tokens
 
 - Cookies & Sessions: Traditional approach using server-side session management and cookies to track user sessions.
 - JWT Tokens: Stateless authentication using JSON Web Tokens for secure authentication and authorization.
-
-<!-- Speaker Notes: Explain the mechanisms used for authentication, including cookies and sessions for server-side session management and JWT tokens for stateless authentication. Discuss the pros and cons of each approach and when to use them. -->
 
 ---
 
@@ -342,10 +313,6 @@ layout: cubstart-cover
 - Use express-openid-connect middleware for seamless integration with Auth0
 - Connect Auth0 user authentication to MongoDB for user management and access control
 - Will show demo!
-
-<!--
-Speaker Notes: Walk through the live demonstration of implementing authentication with Express and Auth0. Highlight the steps involved in setting up Auth0 integration, configuring express-openid-connect middleware, and connecting Auth0 users to MongoDB for user management.
--->
 
 ---
 layout: cubstart-cover
@@ -358,9 +325,12 @@ layout: cubstart-cover
 # Set Up Auth0 Application
 
 - Create an Auth0 account and set up a new application.
-- Obtain the client ID and client secret for the application.
+- Obtain the client ID and other variables for the application.
 
-<!-- Speaker Notes: Explain the initial setup process for creating an Auth0 application. Mention the importance of obtaining the client ID and client secret for integrating Auth0 with Express. -->
+Setup Guides:
+- https://auth0.com/docs/quickstart/webapp/express/interactive
+- https://github.com/auth0/express-openid-connect/blob/master/EXAMPLES.md
+
 
 ---
 
@@ -371,11 +341,7 @@ npm install express express-openid-connect dotenv
 ```
 
 - [express-openid-connect](https://github.com/auth0/express-openid-connect)
-- dotenv
-
-<!--
-Speaker Notes: Guide students through installing the necessary dependencies for implementing authentication with Express and Auth0. Emphasize the use of express-openid-connect middleware for seamless integration.
--->
+- [dotenv](https://github.com/motdotla/dotenv)
 
 ---
 
@@ -395,8 +361,6 @@ app.use(
 );
 ```
 
-<!-- Speaker Notes: Explain how to configure the express-openid-connect middleware in Express.js to authenticate users with Auth0. Mention the required parameters such as issuerBaseURL, clientID, and secret, which should be stored in environment variables. -->
-
 ---
 
 # Protect Routes and Get User Info
@@ -408,8 +372,6 @@ app.get('/profile', requiresAuth(), (req, res) => {
     res.json(req.oidc.user);
 });
 ```
-
-<!-- Speaker Notes: Show how to protect routes by requiring authentication using the express-openid-connect middleware. Demonstrate accessing user information from the req.openid.user object, which contains authenticated user data. -->
 
 ---
 
@@ -429,8 +391,6 @@ const userSchema = new mongoose.Schema({
 
 const User = mongoose.model('User', userSchema);
 ```
-
-<!-- Speaker Notes: Provide a brief code snippet demonstrating how to connect Express.js with MongoDB using Mongoose. Mention the importance of storing MongoDB connection URI in environment variables for security. Show how to define a Mongoose schema for storing user data retrieved from Auth0. Explain the structure of the userSchema and how it maps to user information obtained during authentication. -->
 
 ---
 
@@ -452,13 +412,9 @@ app.get('/profile', requiresAuth(), asyncHandler(async (req, res) => {
 }));
 ```
 
-<!--
-Speaker Notes: Demonstrate how to save authenticated Auth0 users to MongoDB using Mongoose. Explain the findOneAndUpdate() method to either create a new user or update an existing user based on the Auth0 sub (subject) identifier.
--->
-
 ---
 
-<div style="overflow: auto; max-height: 100%" >
+<div style="overflow: auto; max-height: 100%">
 
 ```js {all|3,4,10,14-19,22-24,28-39}{lines:true}
 // server.js (scroll, next page to highlight)
@@ -517,6 +473,135 @@ start();
 ```
 
 </div>
+
+---
+
+```ini
+# .env file
+
+ISSUER_BASE_URL=https://<from auth0>.us.auth0.com
+CLIENT_ID=<client ID from auth0>
+BASE_URL=http://localhost:3000
+SECRET=<some long random secret>
+
+DB_CONNECTION_URI='mongodb+srv://ddoski:<password>@cluster0.XXXXXXX.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'
+DB_NAME=cubhub
+```
+
+---
+
+<div style="overflow: auto; max-height: 100%">
+
+```json
+// package.json
+
+{
+  "name": "cubstart-lecture8",
+  "version": "1.0.0",
+  "description": "Demo app with express and auth0",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Cubstart Web",
+  "private": true,
+  "license": "UNLICENSED",
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "dotenv": "^16.4.5",
+    "express": "^4.18.3",
+    "express-async-handler": "^1.2.0",
+    "express-openid-connect": "^2.17.1",
+    "mongoose": "^8.2.2"
+  }
+}
+```
+
+</div>
+
+---
+
+<div style="overflow: auto; max-height: 100%">
+
+```html
+<!-- index.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CubHub</title>
+
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
+    />
+
+    <style>
+        main {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            text-align: center;
+        }
+
+        pre {
+            text-align: initial;
+            padding: 1rem;
+        }
+
+        #login-view, .logged-in #user-view {
+            display: block;
+        }
+
+        .logged-in #login-view, #user-view {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <h1>CubHub</h1>
+
+        <div id="login-view">
+            <p>You're not logged in!</p>
+            <a href="/login">Login</a>
+        </div>
+
+        <div id="user-view">
+            <pre id="user-info"></pre>
+            <a href="/logout">Logout</a>
+        </div>
+    </main>
+
+    <script>
+        const userInfoEl = document.querySelector('#user-info');
+
+        async function getUserData() {
+            const res = await fetch('/profile');
+
+            if (res.ok) {
+                const data = await res.json();
+                userInfoEl.textContent = JSON.stringify(data, undefined, 2);
+                document.body.classList.add('logged-in');
+            } else {
+                console.log('Error fetching user data - maybe not logged in');
+                console.log(res);
+            }
+        }
+
+        getUserData();
+    </script>
+</body>
+</html>
+```
+
+</div>
+
 
 ---
 
