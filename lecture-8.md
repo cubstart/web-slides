@@ -38,7 +38,7 @@ layout: cubstart-cover
 
 <v-clicks>
 
-- HW 7: Quizlet-ish (Part 2) was delayed from last week
+- HW 7: Quizlet-ish (Part 2) was pushed to this week
   - Will be released today, due Sat/Sun of the week after Spring break
   - No other HW this week!
 - New automated [Extension Request Form](https://forms.gle/ngVNtwp1uPdeNktY8)
@@ -55,7 +55,9 @@ layout: cubstart-cover
 - Spec will be released soon
   - Must have a frontend and interact with some API
   - Backend is optional but would be really cool!
-- Start thinking about partners
+- [Team Formation Form](https://forms.gle/9C6Kj8kJs2eMgRAUA) due by end of week - will also be posted on Ed
+  - Groups of 1-4 people
+- Mid-Semester Feedback Form will be posted on Ed - required!
 
 ---
 layout: cubstart-cover
@@ -83,6 +85,19 @@ What else can backends do? What do they consist of?
 
 <!--
 Speaker Notes: Introduce Websockets as a technology for real-time communication between the client and server. Mention common use cases such as chat applications and live updates. Discuss libraries like Socket.io for implementing Websockets in Node.js applications.
+-->
+
+---
+
+# Security (ex. use Helmet)
+Generally, lots of security considerations in full-stack web dev!
+
+- Helmet is a middleware for Express.js that helps secure HTTP headers by setting various security-related headers.
+- Common Security Headers: Content Security Policy (CSP), X-XSS-Protection, X-Frame-Options, X-Content-Type-Options
+- Importance: Helmet helps mitigate security risks and protect web applications from common vulnerabilities, such as cross-site scripting (XSS) and clickjacking.
+
+<!--
+Speaker Notes: Discuss the importance of security in web applications and how Helmet helps mitigate security risks by setting HTTP headers securely. Explain common security headers provided by Helmet and their purposes.
 -->
 
 ---
@@ -137,18 +152,6 @@ Speaker Notes: Explain the significance of proper error handling in backend deve
 
 <!-- Speaker Notes: Introduce logging as a critical aspect of backend development. Discuss the importance of logging different types of events and choosing appropriate logging levels. Mention popular logging libraries like Winston and Morgan. -->
 
----
-
-# Security (ex. use Helmet)
-Generally, lots of security considerations in full-stack web dev!
-
-- Helmet is a middleware for Express.js that helps secure HTTP headers by setting various security-related headers.
-- Common Security Headers: Content Security Policy (CSP), X-XSS-Protection, X-Frame-Options, X-Content-Type-Options
-- Importance: Helmet helps mitigate security risks and protect web applications from common vulnerabilities, such as cross-site scripting (XSS) and clickjacking.
-
-<!--
-Speaker Notes: Discuss the importance of security in web applications and how Helmet helps mitigate security risks by setting HTTP headers securely. Explain common security headers provided by Helmet and their purposes.
--->
 
 ---
 
@@ -378,15 +381,15 @@ Speaker Notes: Guide students through installing the necessary dependencies for 
 
 # Configure Auth0 Middleware
 
-```javascript
+```js
 const { auth } = require('express-openid-connect');
 
 app.use(
   auth({
-    issuerBaseURL: process.env.AUTH0_ISSUER_BASE_URL,
+    issuerBaseURL: process.env.ISSUER_BASE_URL,
     baseURL: process.env.BASE_URL,
-    clientID: process.env.AUTH0_CLIENT_ID,
-    secret: process.env.SESSION_SECRET,
+    clientID: process.env.CLIENT_ID,
+    secret: process.env.SECRET,
     requiresAuth: false // make routes public unless explicitly stated
   })
 );
@@ -396,13 +399,13 @@ app.use(
 
 ---
 
-# Protect Routes
+# Protect Routes and Get User Info
 
-```javascript
+```js
 const { requiresAuth } = require('express-openid-connect');
 
 app.get('/profile', requiresAuth(), (req, res) => {
-  res.json(req.openid.user);
+    res.json(req.oidc.user);
 });
 ```
 
@@ -410,54 +413,122 @@ app.get('/profile', requiresAuth(), (req, res) => {
 
 ---
 
-# Connect to MongoDB
+# Connect to MongoDB and Store User Data
 
-```javascript
+```js
 const mongoose = require('mongoose');
-mongoose.connect(process.env.MONGODB_URI);
+mongoose.connect(process.env.DB_CONNECTION_URI, { dbName: 'demo' });
 ```
 
-<!-- Speaker Notes: Provide a brief code snippet demonstrating how to connect Express.js with MongoDB using Mongoose. Mention the importance of storing MongoDB connection URI in environment variables for security. -->
-
----
-
-# Store User Data
-
-```javascript
+```js
 const userSchema = new mongoose.Schema({
-  sub: String,
-  email: String,
-  name: String,
+    sub: String,
+    email: String,
+    name: String,
 });
 
 const User = mongoose.model('User', userSchema);
 ```
 
-<!-- Speaker Notes: Show how to define a Mongoose schema for storing user data retrieved from Auth0. Explain the structure of the userSchema and how it maps to user information obtained during authentication. -->
+<!-- Speaker Notes: Provide a brief code snippet demonstrating how to connect Express.js with MongoDB using Mongoose. Mention the importance of storing MongoDB connection URI in environment variables for security. Show how to define a Mongoose schema for storing user data retrieved from Auth0. Explain the structure of the userSchema and how it maps to user information obtained during authentication. -->
 
 ---
 
 # Save Auth0 User to MongoDB
 
 
-```javascript
-app.get('/profile', asyncHandler(async (req, res) => {
-  const { sub, email, name } = req.openid.user;
-  const user = await User.findOneAndUpdate(
-    { sub }, // find by auth0 ID
-    { email, name }, // add email and name
-    {
-      upsert: true, // insert if not already exists
-      new: true, // return updated (new) data
-    }
-  );
-  res.json(user);
+```js
+app.get('/profile', requiresAuth(), asyncHandler(async (req, res) => {
+    const { sub, email, name } = req.oidc.user;
+    const user = await User.findOneAndUpdate(
+        { sub }, // find by auth0 ID
+        { email, name }, // add email and name
+        {
+            upsert: true, // insert if not already exists
+            new: true, // return updated (new) data
+        }
+    );
+    res.json(user);
 }));
 ```
 
 <!--
 Speaker Notes: Demonstrate how to save authenticated Auth0 users to MongoDB using Mongoose. Explain the findOneAndUpdate() method to either create a new user or update an existing user based on the Auth0 sub (subject) identifier.
 -->
+
+---
+
+<div style="overflow: auto; max-height: 100%" >
+
+```js {all|3,4,10,14-19,22-24,28-39}{lines:true}
+// server.js (scroll, next page to highlight)
+
+const dotenv = require('dotenv');
+dotenv.config(); // load environment variables from .env file
+
+const express = require('express');
+const mongoose = require('mongoose');
+const asyncHandler = require('express-async-handler');
+const bodyParser = require('body-parser');
+const { auth, requiresAuth } = require('express-openid-connect');
+
+const app = express();
+
+const userSchema = new mongoose.Schema({
+    sub: String,
+    email: String,
+    name: String,
+});
+const User = mongoose.model('User', userSchema);
+
+app.use(bodyParser.json());
+app.use(auth({
+    authRequired: false,
+}));
+
+app.get('/', (req, res) => res.sendFile(__dirname + '/index.html'));
+
+app.get('/profile', requiresAuth(), asyncHandler(async (req, res) => {
+    const { sub, email, name } = req.oidc.user;
+    const user = await User.findOneAndUpdate(
+        { sub }, // find by auth0 ID
+        { email, name }, // add email and name
+        {
+            upsert: true, // insert if not already exists
+            new: true, // return updated (new) data
+        }
+    );
+    res.json(user);
+}));
+
+// function to connect to database and start the server
+async function start() {
+    const dbName = process.env.DB_NAME;
+    await mongoose.connect(process.env.DB_CONNECTION_URI, { dbName });
+
+    console.log(`Connected to the mongoDB database '${dbName}'`);
+
+    app.listen(3000, () => {
+        console.log('Server listening on port 3000')
+    });
+}
+
+start();
+```
+
+</div>
+
+---
+
+# Notes on Auth0
+
+- Showed a simple example: not production-ready!
+- Better ways to do things like user signup flow
+
+Links:
+- https://auth0.com/docs/quickstart/webapp/express/interactive
+- https://github.com/auth0/express-openid-connect/blob/master/EXAMPLES.md
+
 
 ---
 layout: cubstart-cover
